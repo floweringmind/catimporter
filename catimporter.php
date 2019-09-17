@@ -19,7 +19,7 @@ if (($handle = fopen("cats.csv", "r")) !== FALSE) {
     $num = count($data);
 
     if ($num == 1 && $row > 0){
-	    for ($c=0; $c < $num; $c++) {
+	    for ($counter=0; $counter < $num; $counter++) {
 	        
 	    	// create catlog entry
 
@@ -42,111 +42,49 @@ if (($handle = fopen("cats.csv", "r")) !== FALSE) {
 			  ), "entity_id=%s", $lastid);
 
 
-			//catalog_category_entity_varchar
+			$table = "catalog_category_entity_varchar";
 
-	        // name
-	        DB::insert('catalog_category_entity_varchar', array(
-			  'attribute_id' => '45',
-			  'store_id' => '0',
-			  'entity_id' => $lastid,
-			  'value' => $data[$c],
-			));
-
-	        // display mode
-	        DB::insert('catalog_category_entity_varchar', array(
-			  'attribute_id' => '52',
-			  'store_id' => '0',
-			  'entity_id' => $lastid,
-			  'value' => 'PRODUCTS',
-			));
+	        insertData($table, 45, 0, $lastid, $data[$counter]); // name
+	        insertData($table, 52, 0, $lastid, 'PRODUCTS'); // display mode
 
 	        // clean the name for url and key paths
 			
-			$cleanName = str_replace("'", '-', $data[$c]);
+			$cleanName = str_replace("'", '-', $data[$counter]);
 			$cleanName = str_replace("/", '-', $cleanName);
 			$cleanName = str_replace(":", '', $cleanName);
 			$cleanName = str_replace(".", '', $cleanName);
 			$cleanName = str_replace('"', '', $cleanName);
-			$cleanName = str_replace(',', '', $cleanName);
+			$cleanName = str_replace(' ', '-', $cleanName);			
 
+			insertData($table, 119, 0, $lastid, $cleanName); // url path
+			insertData($table, 120, 0, $lastid, $cleanName); // url key
+	        insertData($table, 137, 0, $lastid, 0); // umm_dd_type
 
-			$cleanName = str_replace(' ', '-', $cleanName);
+	        $table = "catalog_category_entity_int";
 
-
-			// url path
-	        DB::insert('catalog_category_entity_varchar', array(
-			  'attribute_id' => '119',
-			  'store_id' => '0',
-			  'entity_id' => $lastid,
-			  'value' => $cleanName,
-			));
-
-			// url key
-	        DB::insert('catalog_category_entity_varchar', array(
-			  'attribute_id' => '120',
-			  'store_id' => '0',
-			  'entity_id' => $lastid,
-			  'value' => $cleanName,
-			));
-
-	        //	umm_dd_type
-
-	        DB::insert('catalog_category_entity_varchar', array(
-			  'attribute_id' => '137',
-			  'store_id' => '0',
-			  'entity_id' => $lastid,
-			  'value' => '0',
-			));
-
-
-	        //catalog_category_entity_int
-
-	        DB::insert('catalog_category_entity_int', array(
-			  'attribute_id' => '46',
-			  'store_id' => '0',
-			  'entity_id' => $lastid,
-			  'value' => '1',
-			));
-
-	        DB::insert('catalog_category_entity_int', array(
-			  'attribute_id' => '69',
-			  'store_id' => '0',
-			  'entity_id' => $lastid,
-			  'value' => '0',
-			));
-
-	        DB::insert('catalog_category_entity_int', array(
-			  'attribute_id' => '53',
-			  'store_id' => '0',
-			  'entity_id' => $lastid,
-			  'value' => 'NULL',
-			));
-
-	        DB::insert('catalog_category_entity_int', array(
-			  'attribute_id' => '54',
-			  'store_id' => '0',
-			  'entity_id' => $lastid,
-			  'value' => '1',
-			));
-
-	        DB::insert('catalog_category_entity_int', array(
-			  'attribute_id' => '70',
-			  'store_id' => '0',
-			  'entity_id' => $lastid,
-			  'value' => '1',
-			));
-
-	        DB::insert('catalog_category_entity_int', array(
-			  'attribute_id' => '71',
-			  'store_id' => '0',
-			  'entity_id' => $lastid,
-			  'value' => '1',
-			));												
+	        insertData($table, 46, 0, $lastid, 1);
+	        insertData($table, 53, 0, $lastid, 'NULL');
+	        insertData($table, 54, 0, $lastid, 1);
+	        insertData($table, 69, 0, $lastid, 0);
+	        insertData($table, 70, 0, $lastid, 1);
+	        insertData($table, 71, 0, $lastid, 1);
+											
 	    }
 	}
 	$row++;	
   }
   fclose($handle); 
+}
+
+function insertData($table, $attributeId, $storeId, $entityId, $value){
+
+    DB::insert($table, array(
+	  'attribute_id' =>  $attributeId,
+	  'store_id' =>  $storeId,
+	  'entity_id' => $entityId,
+	  'value' => $value,
+	));	
+
 }
 
 echo "Done!";
