@@ -13,6 +13,9 @@ DB::$dbName = 'databasename';
 $now = date('Y/m/d H:i:s');
 $rootcat = '4632';
 
+// Making changes on Chris
+
+
 $row = 0;
 if (($handle = fopen("cats.csv", "r")) !== FALSE) {
   while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
